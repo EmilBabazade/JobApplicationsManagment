@@ -1,0 +1,22 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "ApplicationsAPI.Protos";
+
+package PersonSearch;
+
+service PersonSearch {
+  rpc GetById (GetByIdRequest) returns (Person);
+}
+
+message GetByIdRequest {
+  string id = 1;
+}
+
+message Person {
+  string id = 1;
+  string name = 2;
+  string lastName = 3;
+  string email = 4;
+  string phone = 5;
+  string address = 6;
+}

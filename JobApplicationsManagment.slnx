@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ApllicationsAPI/ApllicationsAPI.csproj" />
+  <Project Path="DocumentsService/DocumentsService.csproj" />
+  <Project Path="PersonsService/PersonsService.csproj" />
+</Solution>

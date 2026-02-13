@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "ApplicationsAPI.Protos";
+package DocumentSearch;
+
+service DocumentSearch {
+	rpc Get(DocumentSearchRequest) returns (DocumentList);
+}
+
+message DocumentSearchRequest {
+  string personId = 1;
+}
+
+message DocumentList {
+  repeated Document documents = 1;
+}
+
+message Document {
+	string id = 1;
+	string personId = 2;
+	string file = 3;
+}
