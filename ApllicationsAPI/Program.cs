@@ -1,5 +1,6 @@
 using ApllicationsAPI.Models.Data;
 using ApplicationsAPI.Protos;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,9 @@ builder.Services
 builder.Services
     .AddGrpcClient<PersonSearch.PersonSearchClient>(o =>
         o.Address = new Uri(builder.Configuration["GrpcUris:PersonsService"]));
+
+builder.Services
+    .AddMassTransit(opts => opts.UsingRabbitMq());
 
 var app = builder.Build();
 

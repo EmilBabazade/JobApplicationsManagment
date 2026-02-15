@@ -1,6 +1,8 @@
 ﻿using ApllicationsAPI.Models;
 using ApllicationsAPI.Models.Data;
 using ApplicationsAPI.Protos;
+using MassTransit;
+using Messages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,13 +15,15 @@ namespace ApllicationsAPI.Controllers
         private readonly ApplicationDbContext _context;
         private readonly DocumentSearch.DocumentSearchClient _documentClient;
         private readonly PersonSearch.PersonSearchClient _personSearchClient;
+        private readonly IPublishEndpoint _publishEndpoint;
 
         public ApplicationsController(ApplicationDbContext context, DocumentSearch.DocumentSearchClient documentClient,
-            PersonSearch.PersonSearchClient personSearchClient)
+            PersonSearch.PersonSearchClient personSearchClient, IPublishEndpoint publishEndpoint)
         {
             _context = context;
             _documentClient = documentClient;
             _personSearchClient = personSearchClient;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
@@ -60,22 +64,49 @@ namespace ApllicationsAPI.Controllers
         [HttpPatch("{id}/NextStep")]
         public async Task<IActionResult> NextStep(Guid id)
         {
-            return await Patch(id, application => application.NextStep());
+            // TODO: this shit is broken
+            return await Patch(
+                id, 
+                application => application.NextStep(),
+                async application =>
+                {
+                    if(application.Appointment != null)
+                    {
+                        var message = new AppointmentSetMessage(application.Id, application.PersonId, application.Appointment.Start, application.Appointment.End);
+                        await _publishEndpoint.Publish(message);
+                    }
+                });
         }
 
         [HttpPatch("{id}/Reject")]
         public async Task<IActionResult> Reject(Guid id)
         {
-            return await Patch(id, application => application.Reject());
+            // TODO: Consume it in NotificationService
+            return await Patch(id, 
+                application => application.Reject(),
+                async application =>
+                {
+                    var message = new RejectionMessage(application.Id, application.PersonId);
+                    await _publishEndpoint.Publish(message);
+                });
         }
 
         [HttpPatch("{id}/SetAppointment")]
         public async Task<IActionResult> SetAppointment(Guid id, TimeSlot timeSlot)
         {
-            return await Patch(id, application => application.SetAppointment(timeSlot));
+            return await Patch(id, 
+                application => application.SetAppointment(timeSlot),
+                async application =>
+                {
+                    if (application.Appointment != null)
+                    {
+                        var message = new AppointmentSetMessage(application.Id, application.PersonId, application.Appointment.Start, application.Appointment.End);
+                        await _publishEndpoint.Publish(message);
+                    }
+                });
         }
 
-        private async Task<IActionResult> Patch(Guid id, Action<Application> action)
+        private async Task<IActionResult> Patch(Guid id, Action<Application> action, Func<Application, Task>? postSaveAction = null)
         {
             var application = await _context.Applications.FindAsync(id);
             if (application == null)
@@ -87,6 +118,10 @@ namespace ApllicationsAPI.Controllers
             {
                 action(application);
                 await _context.SaveChangesAsync();
+                if (postSaveAction != null)
+                {
+                    await postSaveAction(application);
+                }
             }
             catch (AlreadyAcceptedException)
             {

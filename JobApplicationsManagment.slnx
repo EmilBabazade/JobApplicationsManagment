@@ -1,5 +1,7 @@
 <Solution>
   <Project Path="ApllicationsAPI/ApllicationsAPI.csproj" />
   <Project Path="DocumentsService/DocumentsService.csproj" />
+  <Project Path="Messages/Messages.csproj" Id="8be3d2d1-40ac-47b0-bf7a-57947b5e3d6a" />
+  <Project Path="NotificationService/NotificationService.csproj" Id="a9f6a7cc-6662-498b-9847-c86a34fbca0c" />
   <Project Path="PersonsService/PersonsService.csproj" />
 </Solution>
