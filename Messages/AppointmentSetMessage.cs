@@ -12,7 +12,7 @@ public class AppointmentSetMessage : BaseMessage
     public DateTimeOffset AppointmentStart { get; private set; }
     [JsonInclude]
     public DateTimeOffset AppointmentEnd { get; private set; }
-    public AppointmentSetMessage(Guid applicationId, Guid personId, DateTimeOffset appointmentStart, DateTimeOffset appointmentEnd) : base()
+    public AppointmentSetMessage(Guid applicationId, Guid personId, DateTimeOffset appointmentStart, DateTimeOffset appointmentEnd) : base(applicationId)
     {
         ApplicationId = applicationId;
         PersonId = personId;

@@ -75,6 +75,11 @@ public class ApplicationDetailsDTO
     }
 }
 
+public class NextStepRequest
+{
+    public TimeSlot? Appointment { get; set; }
+}
+
 public class Application
 {
     public Guid Id { get; private set; }
@@ -123,9 +128,9 @@ public class Application
         Appointment = appointment;
     }
 
-    public void NextStep(TimeSlot? appointment = null)
+    public void NextStep(NextStepRequest request)
     {
-        Appointment = appointment;
+        Appointment = request.Appointment;
         Status = Status switch
         {
             Status.HRInterview => Status.TechnicalInterview,

@@ -62,12 +62,11 @@ namespace ApllicationsAPI.Controllers
         }
 
         [HttpPatch("{id}/NextStep")]
-        public async Task<IActionResult> NextStep(Guid id)
+        public async Task<IActionResult> NextStep(Guid id, NextStepRequest requestData)
         {
-            // TODO: this shit is broken
             return await Patch(
                 id, 
-                application => application.NextStep(),
+                application => application.NextStep(requestData),
                 async application =>
                 {
                     if(application.Appointment != null)
@@ -81,7 +80,6 @@ namespace ApllicationsAPI.Controllers
         [HttpPatch("{id}/Reject")]
         public async Task<IActionResult> Reject(Guid id)
         {
-            // TODO: Consume it in NotificationService
             return await Patch(id, 
                 application => application.Reject(),
                 async application =>
@@ -158,11 +156,6 @@ namespace ApllicationsAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool ApplicationExists(Guid id)
-        {
-            return _context.Applications.Any(e => e.Id == id);
         }
     }
 }

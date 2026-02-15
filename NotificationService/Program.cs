@@ -16,11 +16,18 @@ builder.Services
 builder.Services.AddMassTransit(opts =>
 {
     opts.AddConsumer<AppointmentSetMessageConsumer>();
+    opts.AddConsumer<RejectMessageConsumer>();
     opts.UsingRabbitMq((context, cfg) =>
     {
         cfg.ReceiveEndpoint("appointment_set_queue", e =>
         {
             e.ConfigureConsumer<AppointmentSetMessageConsumer>(context);
+            e.UseConcurrencyLimit(1);
+        });
+
+        cfg.ReceiveEndpoint("rejection_queue", e =>
+        {
+            e.ConfigureConsumer<RejectMessageConsumer>(context);
             e.UseConcurrencyLimit(1);
         });
     });
