@@ -34,14 +34,6 @@ public enum Status
     Rejected,
 }
 
-public class CreateApplicationRequest
-{
-    public Guid PersonId { get; set; }
-    public TimeSlot? Appointment { get; set; }
-    public Seniority Seniority { get; set; }
-    public IEnumerable<Skill> Skills { get; set; }
-}
-
 public class PatchApplicationRequest
 {
     public Guid PersonId { get; set; }
@@ -76,11 +68,6 @@ public class Application
         Seniority = seniority;
         Skills = skills;
         Status = Status.HRInterview;
-    }
-
-    public Application(CreateApplicationRequest createRequest) :
-        this(createRequest.PersonId, createRequest.Seniority, createRequest.Skills, createRequest.Appointment)
-    {
     }
 
     /// <summary>

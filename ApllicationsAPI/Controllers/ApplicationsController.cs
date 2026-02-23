@@ -1,4 +1,5 @@
 ﻿using ApllicationsAPI.Commands;
+using ApllicationsAPI.Commands.Common;
 using ApllicationsAPI.Models;
 using ApllicationsAPI.Models.Data;
 using ApplicationsAPI.Protos;
@@ -127,12 +128,9 @@ namespace ApllicationsAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Application>> PostApplication(CreateApplicationRequest requestData)
+        public async Task<ActionResult<Application>> PostApplication(CreateApplicationCommand requestData)
         {
-            var application = new Application(requestData);
-            _context.Applications.Add(application);
-            await _context.SaveChangesAsync();
-
+            var application = await _mediator.Send(requestData);
             return CreatedAtAction("GetApplication", new { id = application.Id }, application);
         }
 
