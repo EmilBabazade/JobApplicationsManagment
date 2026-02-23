@@ -43,11 +43,6 @@ public class PatchApplicationRequest
     public Status Status { get; set; }
 }
 
-public class NextStepRequest
-{
-    public TimeSlot? Appointment { get; set; }
-}
-
 public class Application
 {
     public Guid Id { get; private set; }
@@ -91,9 +86,16 @@ public class Application
         Appointment = appointment;
     }
 
-    public void NextStep(NextStepRequest request)
+    /// <summary>
+    /// Move applicant to next status and set a new appointment ( can be null )
+    /// </summary>
+    /// <param name="appointment"></param>
+    /// <exception cref="AlreadyRejectedException"></exception>
+    /// <exception cref="AlreadyAcceptedException"></exception>
+    /// <exception cref="InvalidDataException"></exception>
+    public void NextStep(TimeSlot? appointment)
     {
-        Appointment = request.Appointment;
+        Appointment = appointment;
         Status = Status switch
         {
             Status.HRInterview => Status.TechnicalInterview,

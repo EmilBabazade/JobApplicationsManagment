@@ -52,28 +52,21 @@ namespace ApllicationsAPI.Controllers
         [HttpPatch("{id}/PatchIncorrectData")]
         public async Task<IActionResult> PatchApplication(Guid id, PatchApplicationRequest requestData)
         {
+            // TODO: mediatr
             return await Patch(id, application => application.PatchApplication(requestData));
         }
 
         [HttpPatch("{id}/NextStep")]
-        public async Task<IActionResult> NextStep(Guid id, NextStepRequest requestData)
+        public async Task<IActionResult> NextStep(NextStepCommand command)
         {
-            return await Patch(
-                id, 
-                application => application.NextStep(requestData),
-                async application =>
-                {
-                    if(application.Appointment != null)
-                    {
-                        var message = new AppointmentSetMessage(application.Id, application.PersonId, application.Appointment.Start, application.Appointment.End);
-                        await _publishEndpoint.Publish(message);
-                    }
-                });
+            await _mediator.Send(command);
+            return NoContent();
         }
 
         [HttpPatch("{id}/Reject")]
         public async Task<IActionResult> Reject(Guid id)
         {
+            // TODO: mediatr
             return await Patch(id, 
                 application => application.Reject(),
                 async application =>
@@ -86,6 +79,7 @@ namespace ApllicationsAPI.Controllers
         [HttpPatch("{id}/SetAppointment")]
         public async Task<IActionResult> SetAppointment(Guid id, TimeSlot timeSlot)
         {
+            // TODO: mediatr
             return await Patch(id, 
                 application => application.SetAppointment(timeSlot),
                 async application =>

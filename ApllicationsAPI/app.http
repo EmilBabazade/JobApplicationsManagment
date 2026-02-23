@@ -1,5 +1,5 @@
 @baseUrl = https://localhost:7061
-@applicationId = 3933349d-ec7f-4a6f-a94b-162c47039d37
+@applicationId = 5afd8791-3e46-423f-9dd8-029b82a97e77
 @personId = 11111111-1111-1111-1111-111111111111
 
 ###
@@ -64,6 +64,7 @@ PATCH {{baseUrl}}/api/Applications/{{applicationId}}/NextStep
 Content-Type: application/json
 
 {
+  "Id": "{{applicationId}}",
   "appointment": {
     "start": "2024-12-03T09:00:00+02:00",
     "end": "2024-12-03T10:00:00+02:00"
