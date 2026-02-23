@@ -1,3 +1,4 @@
+using System.Reflection;
 using ApllicationsAPI.Models.Data;
 using ApplicationsAPI.Protos;
 using MassTransit;
@@ -29,6 +30,9 @@ builder.Services
 
 builder.Services
     .AddMassTransit(opts => opts.UsingRabbitMq());
+
+builder.Services
+    .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();
 

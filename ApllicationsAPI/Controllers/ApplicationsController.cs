@@ -1,7 +1,9 @@
-﻿using ApllicationsAPI.Models;
+﻿using ApllicationsAPI.Commands;
+using ApllicationsAPI.Models;
 using ApllicationsAPI.Models.Data;
 using ApplicationsAPI.Protos;
 using MassTransit;
+using MediatR;
 using Messages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +18,23 @@ namespace ApllicationsAPI.Controllers
         private readonly DocumentSearch.DocumentSearchClient _documentClient;
         private readonly PersonSearch.PersonSearchClient _personSearchClient;
         private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IMediator _mediator;
 
         public ApplicationsController(ApplicationDbContext context, DocumentSearch.DocumentSearchClient documentClient,
-            PersonSearch.PersonSearchClient personSearchClient, IPublishEndpoint publishEndpoint)
+            PersonSearch.PersonSearchClient personSearchClient, IPublishEndpoint publishEndpoint, IMediator mediator)
         {
             _context = context;
             _documentClient = documentClient;
             _personSearchClient = personSearchClient;
             _publishEndpoint = publishEndpoint;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Application>>> GetApplications()
+        public async Task<ActionResult<IEnumerable<ApplicationDTO>>> GetApplications()
         {
-            return await _context.Applications.ToListAsync();
+            var res = await _mediator.Send(new GetApplicationsQuery());
+            return Ok(res);
         }
 
         [HttpGet("{id}")]

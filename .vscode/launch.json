@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ApplicationsAPI Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/ApllicationsAPI/ApllicationsAPI.csproj",
+        },
+        {
+            "name": "DocumentsService Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/DocumentsService/DocumentsService.csproj"
+        },
+        {
+            "name": "NotificationService Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/NotificationService/NotificationService.csproj"
+        },
+        {
+            "name": "PersonsService Debug",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/PersonsService/PersonsService.csproj"
+        },
+    ],
+    "compounds": [
+        {
+            "name": "Start All (Debug)",
+            "configurations": [
+                "ApplicationsAPI Debug",
+                "DocumentsService Debug",
+                "NotificationService Debug",
+                "PersonsService Debug"
+            ]
+        }
+    ]
+}
