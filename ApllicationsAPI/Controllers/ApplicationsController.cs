@@ -40,24 +40,12 @@ namespace ApllicationsAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ApplicationDetailsDTO>> GetApplication(Guid id)
         {
-            var application = await _context.Applications.FindAsync(id);
-
+            var application = await _mediator.Send(new GetApplicationByIdQuery(id));
             if (application == null)
             {
                 return NotFound();
             }
-
-            var documents = await _documentClient.GetAsync(new DocumentSearchRequest
-            {
-                PersonId = application.PersonId.ToString()
-            });
-
-            var person = await _personSearchClient.GetByIdAsync(new GetByIdRequest
-            {
-                Id = application.PersonId.ToString()
-            });
-
-            return new ApplicationDetailsDTO(application, documents, person);
+            return application;
         }
 
         [HttpPatch("{id}/PatchIncorrectData")]

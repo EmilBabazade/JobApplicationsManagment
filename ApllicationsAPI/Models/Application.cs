@@ -51,30 +51,6 @@ public class PatchApplicationRequest
     public Status Status { get; set; }
 }
 
-public class ApplicationDetailsDTO
-{
-    public Guid Id { get; set; }
-    public Guid PersonId { get; set; }
-    public TimeSlot? Appointment { get; set; }
-    public Seniority Seniority { get; set; }
-    public IEnumerable<Skill> Skills { get; set; }
-    public Status Status { get; set; }
-    public DocumentList Documents { get; set; }
-    public Person Person { get; set; }
-
-    public ApplicationDetailsDTO(Application application, DocumentList documentList, Person person)
-    {
-        Id = application.Id;
-        PersonId = application.PersonId;
-        Appointment = application.Appointment;
-        Seniority = application.Seniority;
-        Skills = application.Skills;
-        Status = application.Status;
-        Documents = documentList;
-        Person = person;
-    }
-}
-
 public class NextStepRequest
 {
     public TimeSlot? Appointment { get; set; }
