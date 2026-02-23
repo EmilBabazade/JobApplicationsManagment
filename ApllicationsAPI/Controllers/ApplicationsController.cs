@@ -94,6 +94,7 @@ namespace ApllicationsAPI.Controllers
 
         private async Task<IActionResult> Patch(Guid id, Action<Application> action, Func<Application, Task>? postSaveAction = null)
         {
+            // TODO: get rid of this and use commands, exceptions are handled by middleware in program.cs
             var application = await _context.Applications.FindAsync(id);
             if (application == null)
             {
