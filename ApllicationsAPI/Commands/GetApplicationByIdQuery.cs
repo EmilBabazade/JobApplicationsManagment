@@ -20,7 +20,7 @@ public class GetApplicationByIdHandler(
     public async Task<ApplicationDetailsDTO> Handle(GetApplicationByIdQuery request, CancellationToken cancellationToken)
     {
         // TODO: use dappr for queries
-        var application = await _dbContext.Applications.FindAsync(request.Id);
+        var application = await _dbContext.Applications.FindAsync([request.Id], cancellationToken);
 
         if (application == null)
         {

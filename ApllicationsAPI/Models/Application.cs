@@ -1,5 +1,4 @@
-﻿using ApplicationsAPI.Protos;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace ApllicationsAPI.Models;
 
@@ -34,15 +33,6 @@ public enum Status
     Rejected,
 }
 
-public class PatchApplicationRequest
-{
-    public Guid PersonId { get; set; }
-    public TimeSlot? Appointment { get; set; }
-    public Seniority Seniority { get; set; }
-    public IEnumerable<Skill> Skills { get; set; }
-    public Status Status { get; set; }
-}
-
 public class Application
 {
     public Guid Id { get; private set; }
@@ -72,13 +62,13 @@ public class Application
     /// you need to update other shit. Is this ideal ? no - but it is also not ideal to manually update database, better give users a way to un-fuckup
     /// </summary>
     /// <param name="patchApplicationRequest"></param>
-    public void PatchApplication(PatchApplicationRequest patchApplicationRequest)
+    public void PatchApplication(Guid personId, TimeSlot? appointment, Seniority seniority, IEnumerable<Skill> skills, Status status)
     {
-        PersonId = patchApplicationRequest.PersonId;
-        Appointment = patchApplicationRequest.Appointment;
-        Seniority = patchApplicationRequest.Seniority;
-        Skills = patchApplicationRequest.Skills;
-        Status = patchApplicationRequest.Status;
+        PersonId = personId;
+        Appointment = appointment;
+        Seniority = seniority;
+        Skills = skills;
+        Status = status;
     }
 
     public void SetAppointment(TimeSlot appointment)

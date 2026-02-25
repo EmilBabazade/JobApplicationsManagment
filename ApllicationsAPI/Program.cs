@@ -1,5 +1,5 @@
 using System.Reflection;
-using ApllicationsAPI.Commands;
+using ApllicationsAPI.Commands.Common;
 using ApllicationsAPI.Models.Data;
 using ApplicationsAPI.Protos;
 using MassTransit;
@@ -34,6 +34,8 @@ builder.Services
 
 builder.Services
     .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+builder.Services.AddScoped<HelperRepo>();
 
 var app = builder.Build();
 

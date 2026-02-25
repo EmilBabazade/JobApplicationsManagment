@@ -1,4 +1,4 @@
-namespace ApllicationsAPI.Commands;
+namespace ApllicationsAPI.Commands.Common;
 
 public class NotFoundException: Exception{}
 

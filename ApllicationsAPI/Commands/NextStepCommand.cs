@@ -1,3 +1,4 @@
+using ApllicationsAPI.Commands.Common;
 using ApllicationsAPI.Models;
 using ApllicationsAPI.Models.Data;
 using MassTransit;
@@ -6,20 +7,21 @@ using Messages;
 
 namespace ApllicationsAPI.Commands;
 
-public record NextStepCommand(Guid id, TimeSlot? Appointment) : IRequest;
+public record NextStepCommand(Guid id, TimeSlot? Appointment) : IRequest<ApplicationDTO>;
 
-public class NextStepHandler(ApplicationDbContext dbContext, IPublishEndpoint publishEndpoint) : IRequestHandler<NextStepCommand>
+public class NextStepHandler(
+    ApplicationDbContext dbContext, 
+    IPublishEndpoint publishEndpoint,
+    HelperRepo helperRepo
+) : IRequestHandler<NextStepCommand, ApplicationDTO>
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
     private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+    private readonly HelperRepo _helperRepo = helperRepo;
 
-    public async Task Handle(NextStepCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationDTO> Handle(NextStepCommand request, CancellationToken cancellationToken)
     {
-        var application = await _dbContext.Applications.FindAsync(request.id, cancellationToken);
-        if (application == null)
-        {
-            throw new NotFoundException();
-        }
+        var application = await _helperRepo.FindByIdAsync(request.id, cancellationToken);
 
         try
         {
@@ -40,5 +42,7 @@ public class NextStepHandler(ApplicationDbContext dbContext, IPublishEndpoint pu
             var message = new AppointmentSetMessage(application.Id, application.PersonId, application.Appointment.Start, application.Appointment.End);
             await _publishEndpoint.Publish(message);
         }
+
+        return new ApplicationDTO(application);
     }
 }
